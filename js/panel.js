@@ -41,7 +41,7 @@
     applyTheme({ color_bg: '#14110F', color_accent: '#E0B354' });
     const T = { login: ['Zaloguj się', 'Zaloguj'], signup: ['Załóż konto lokalu', 'Załóż konto'], reset: ['Nie pamiętasz hasła?', 'Wyślij link'] }[mode];
     main.innerHTML =
-      '<div class="stack" style="margin-top:6vh"><div class="head"><div class="head__logo">WW</div><div><div class="head__name">' + esc(CFG.APP_NAME || 'WartoWracać') + '</div><div class="head__sub">Panel lokalu</div></div></div>' +
+      '<div class="stack" style="margin-top:6vh"><div class="head"><div class="head__logo"><img src="img/logo.svg" alt="" style="width:38px;height:38px"></div><div><div class="head__name">' + esc(CFG.APP_NAME || 'WartoWracać') + '</div><div class="head__sub">Panel lokalu</div></div></div>' +
       '<form class="box" id="auth" novalidate><h1>' + T[0] + '</h1>' +
       (mode === 'signup' ? '<p class="muted small">30 dni za darmo. Bez karty płatniczej.</p>' : '') +
       (note ? '<p class="ok">' + esc(note) + '</p>' : '') +

@@ -1,5 +1,5 @@
 // Pamięć podręczna: karta otwiera się szybko i działa przy słabym zasięgu.
-const VERSION = 'ww-v1';
+const VERSION = 'ww-v2';
 const ASSETS = [
   './', 'index.html', 'panel.html', 'config.js', 'css/style.css',
   'js/core.js', 'js/card.js', 'js/panel.js',
