@@ -55,9 +55,8 @@ p { margin: 0; }
 .st.gift { border: 2px solid #F2B8C6; }
 .mcard p { margin-top: 12px; font-weight: 800; font-size: .85rem; }
 .qr { margin-top: 12px; background: #fff; border-radius: 14px; padding: 12px; text-align: center; font-size: .78rem; color: var(--muted); }
-.qr i { display: block; width: 92px; height: 92px; margin: 6px auto; background:
-  conic-gradient(from 90deg at 30% 30%, #111 25%, transparent 0) 0 0/18px 18px,
-  linear-gradient(#fff,#fff); border: 6px solid #111; border-radius: 4px; }
+.qr i { display: block; width: 104px; height: 104px; margin: 6px auto; }
+.qr i svg { width: 100%; height: 100%; display: block; }
 
 /* Sekcje */
 section { padding: 72px 0; }
@@ -146,7 +145,7 @@ footer a:hover { color: #fff; }
             </div>
             <p>Jeszcze 1 wizyta do −20% na pedicure</p>
           </div>
-          <div class="qr">Pokaż ten kod przy kasie<i></i><b style="color:#111;letter-spacing:.2em">K7PQ2M</b></div>
+          <div class="qr">Pokaż ten kod przy kasie<i id="demoqr"></i><b style="color:#111;letter-spacing:.2em">K7PQ2M</b></div>
         </div>
       </div>
     </div>
@@ -253,5 +252,9 @@ footer a:hover { color: #fff; }
   </div>
 </footer>
 
+<script src="vendor/qrcode.js"></script>
+<script>
+try { const q = qrcode(0, 'M'); q.addData('https://app.wartowracac.pl/oferta.html'); q.make(); document.getElementById('demoqr').innerHTML = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); } catch (e) {}
+</script>
 </body>
 </html>
