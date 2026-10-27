@@ -23,7 +23,7 @@
   const main = $('#main');
   const { data } = await sb.auth.getSession();
   if (!data.session) { main.innerHTML = '<div class="box"><p>Zaloguj się najpierw w <a href="panel.html">panelu</a>.</p></div>'; return; }
-  const PRICE = { start: 69, pro: 129 };
+  const PRICE = { start: 29, pro: 59 };
   async function load() {
     let rows;
     try { rows = await rpc('admin_list'); } catch (e) { main.innerHTML = '<div class="box"><p>' + esc(e.message) + '</p></div>'; return; }
