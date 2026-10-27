@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administracja · WartoWracać</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="img/icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main class="app app--wide" id="main"><div class="spinner"></div></main>
+<script src="config.js"></script>
+<script src="vendor/supabase.js"></script>
+<script src="vendor/qrcode.js"></script>
+<script src="js/core.js"></script>
+<script>
+// Panel administratora: wszystkie lokale, pakiet, status i okres próbny.
+(async function () {
+  const { rpc, esc, $, $$, toast, fmtShort, sb } = window.WW;
+  const main = $('#main');
+  const { data } = await sb.auth.getSession();
+  if (!data.session) { main.innerHTML = '<div class="box"><p>Zaloguj się najpierw w <a href="panel.html">panelu</a>.</p></div>'; return; }
+  const PRICE = { start: 69, pro: 129 };
+  async function load() {
+    let rows;
+    try { rows = await rpc('admin_list'); } catch (e) { main.innerHTML = '<div class="box"><p>' + esc(e.message) + '</p></div>'; return; }
+    const paying = rows.filter((r) => r.status === 'active');
+    const mrr = paying.reduce((s, r) => s + PRICE[r.plan], 0);
+    main.innerHTML = '<div class="row row--between"><h1>Lokale</h1><a class="btn btn--sm" href="panel.html">← Panel</a></div>' +
+      '<div class="stats"><div class="stat"><b>' + rows.length + '</b><span>Wszystkie lokale</span></div><div class="stat"><b>' + paying.length + '</b><span>Płacące</span></div>' +
+      '<div class="stat"><b>' + rows.filter((r) => r.status === 'trial').length + '</b><span>Na okresie próbnym</span></div><div class="stat"><b>' + mrr.toLocaleString('pl-PL') + ' zł</b><span>Przychód netto / mies.</span></div></div>' +
+      '<div class="list">' + rows.map((r) => '<div class="item" style="flex-wrap:wrap"><div class="grow"><div class="item__name"><a href="index.html?l=' + esc(r.slug) + '" target="_blank">' + esc(r.name) + '</a></div>' +
+        '<div class="item__sub">' + esc(r.category) + ' · ' + esc(r.owner || '') + ' · kart: ' + r.cards + ' · pieczątek (30 dni): ' + r.stamps_30 + ' · od ' + fmtShort(r.created_at) + '</div></div>' +
+        '<div class="row" data-id="' + r.id + '"><select data-k="plan"><option value="start"' + (r.plan === 'start' ? ' selected' : '') + '>Start</option><option value="pro"' + (r.plan === 'pro' ? ' selected' : '') + '>Pro</option></select>' +
+        '<select data-k="status"><option value="trial"' + (r.status === 'trial' ? ' selected' : '') + '>Próba</option><option value="active"' + (r.status === 'active' ? ' selected' : '') + '>Płaci</option><option value="paused"' + (r.status === 'paused' ? ' selected' : '') + '>Wstrzymany</option></select>' +
+        '<input type="date" data-k="trial" value="' + r.trial_until + '" aria-label="Próba do"></div></div>').join('') + '</div>';
+    $$('[data-id]').forEach((row) => row.addEventListener('change', async () => {
+      try {
+        await rpc('admin_set', { p_business: row.dataset.id, p_plan: row.querySelector('[data-k=plan]').value, p_status: row.querySelector('[data-k=status]').value, p_trial_until: row.querySelector('[data-k=trial]').value || null });
+        toast('Zapisano'); load();
+      } catch (e) { toast(e.message, true); }
+    }));
+  }
+  load();
+})();
+</script>
+</body>
+</html>
